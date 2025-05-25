@@ -130,6 +130,14 @@ def generate_readme_with_gemini(file_contents: Dict[str, str]) -> str:
         
     except Exception as e:
         print(f"Error generating README with Gemini: {e}")
+        # Attempt to list models if there's an error initializing the model
+        try:
+            print("Attempting to list available models:")
+            for m in genai.list_models():
+                print(m.name)
+        except Exception as list_error:
+            print(f"Error listing models: {list_error}")
+
         return f"# Error Generating README\n\nAn error occurred while generating the README: {str(e)}"
 
 def save_readme(project_folder: pathlib.Path, readme_content: str) -> None:
