@@ -26,7 +26,7 @@ def should_ignore(path: pathlib.Path) -> bool:
     return False
 
 def find_project_folders(root_dir: pathlib.Path) -> List[pathlib.Path]:
-    """Finds potential project folders in the root directory, excluding ignored ones."""
+    """Finds potential project folders in the root directory, excluding ignored ones and the root itself."""
     project_folders = []
     for item in os.scandir(root_dir):
         if item.is_dir() and not should_ignore(pathlib.Path(item.path)):
@@ -36,7 +36,8 @@ def find_project_folders(root_dir: pathlib.Path) -> List[pathlib.Path]:
                 project_folders.append(pathlib.Path(item.path))
             else:
                 print(f"Skipping folder {item.path} due to {STOP_AUTOMATION_FOLDER} folder.")
-    return project_folders
+    # Explicitly skip the root directory itself
+    return [folder for folder in project_folders if folder != root_dir]
 
 def is_text_file(file_path: pathlib.Path) -> bool:
     """Check if a file is likely to be a text file."""
@@ -77,7 +78,7 @@ def generate_readme_with_gemini(file_contents: Dict[str, str]) -> str:
     """Sends file contents to Gemini API and generates README content."""
     try:
         # Initialize Gemini model
-        model = genai.GenerativeModel('gemini-1.0-pro')
+        model = genai.GenerativeModel('gemini-pro')
         
         # Prepare the base prompt
         base_prompt = """Please analyze the following project files and generate a comprehensive README.md file.
