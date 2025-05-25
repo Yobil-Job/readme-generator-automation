@@ -29,7 +29,7 @@ jobs:
         
     - name: Generate README
       env:
-        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        GOOGLEAPIKEY: ${{ secrets.GOOGLEAPIKEY }}
       run: |
         cd automation
         python generate_readme.py

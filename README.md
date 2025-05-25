@@ -16,7 +16,7 @@ This repository contains an automation tool that generates interactive and style
 2. Add your Google API key as a GitHub Secret:
    - Go to repository Settings
    - Navigate to Secrets and variables → Actions
-   - Create a new secret named `GOOGLE_API_KEY`
+   - Create a new secret named `GOOGLEAPIKEY`
    - Add your Google API key as the value
 
 ## Usage
