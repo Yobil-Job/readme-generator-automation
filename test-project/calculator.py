@@ -1,3 +1,4 @@
+# Simple calculator module for testing README generation
 def add(a, b):
     """Add two numbers."""
     return a + b
