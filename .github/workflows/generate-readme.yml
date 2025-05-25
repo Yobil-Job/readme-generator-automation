@@ -5,9 +5,8 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'README.md'
+      - '**/README.md'
       - '.github/workflows/generate-readme.yml'
-      - 'automation/**'
 
 jobs:
   generate-readme:
