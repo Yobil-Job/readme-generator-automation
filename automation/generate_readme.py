@@ -77,7 +77,7 @@ def generate_readme_with_gemini(file_contents: Dict[str, str]) -> str:
     """Sends file contents to Gemini API and generates README content."""
     try:
         # Initialize Gemini model
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel('gemini-1.0-pro')
         
         # Prepare the base prompt
         base_prompt = """Please analyze the following project files and generate a comprehensive README.md file.
