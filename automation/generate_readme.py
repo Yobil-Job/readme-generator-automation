@@ -5,9 +5,9 @@ from typing import Dict, List
 import mimetypes
 
 # Configure the Gemini API key
-api_key = os.environ.get("GOOGLEAPIKEY")
+api_key = os.environ.get("GOOGLE_API_KEY")
 if not api_key:
-    raise ValueError("GOOGLEAPIKEY environment variable is not set")
+    raise ValueError("GOOGLE_API_KEY environment variable is not set")
 genai.configure(api_key=api_key)
 
 # Constants
