@@ -79,8 +79,8 @@ def generate_readme_with_gemini(file_contents: Dict[str, str]) -> str:
         # Initialize Gemini model
         model = genai.GenerativeModel('gemini-pro')
         
-        # Prepare the prompt
-        prompt = """Please analyze the following project files and generate a comprehensive README.md file.
+        # Prepare the base prompt
+        base_prompt = """Please analyze the following project files and generate a comprehensive README.md file.
         The README should be in Markdown format with inline HTML for interactive elements.
         
         Required sections:
@@ -97,15 +97,33 @@ def generate_readme_with_gemini(file_contents: Dict[str, str]) -> str:
         Project files:
         """
         
-        # Add file contents to the prompt
-        for file_path, content in file_contents.items():
-            prompt += f"\n\nFile: {file_path}\nContent:\n{content}\n"
+        prompt = base_prompt
         
+        # Add file contents to the prompt, checking total length
+        for file_path, content in file_contents.items():
+            file_block = f"\n\nFile: {file_path}\nContent:\n{content}\n"
+            # Check if adding this file block exceeds the max content length
+            if len(prompt) + len(file_block) > MAX_CONTENT_LENGTH:
+                print(f"Warning: Skipping file {file_path} because adding its content would exceed the total prompt length limit.")
+                # Optionally, could truncate the file_block further here if needed
+                break # Stop adding files if the limit is reached
+                
+            prompt += file_block
+        
+        # Add a message if files were skipped
+        if len(prompt) == len(base_prompt):
+             prompt += "\n\nNo file contents were included in the prompt due to size limitations or no relevant files being found."
+        elif len(prompt) < sum(len(f"\n\nFile: {fp}\nContent:\n{content}\n") for fp, content in file_contents.items()) + len(base_prompt):
+             prompt += "\n\n... (some file contents were skipped due to total prompt length limitations)"
+
+
         # Generate content
         response = model.generate_content(prompt)
         
         if not response.text:
-            raise ValueError("Empty response from Gemini API")
+            # If response is still empty, it might be another issue, but we should return something informative
+            print("Gemini API returned an empty response even after prompt truncation.")
+            return f"# Error Generating README\n\nAn error occurred while generating the README: Received empty response from Gemini API. Prompt length: {len(prompt)}"
             
         return response.text
         
